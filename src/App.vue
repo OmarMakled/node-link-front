@@ -38,7 +38,7 @@
         <div class="modal-background"></div>
         <div class="modal-card">
           <div class="modal-card-body p4">
-            <form-node :node="node" :targets="data" @refresh="refresh"></form-node>
+            <form-node :node="node" :neighborhoods="data" @refresh="refresh"></form-node>
           </div>
         </div>
         <button class="modal-close is-large" aria-label="close" @click="showModal = false"></button>
@@ -176,23 +176,30 @@ export default {
         }
       }
       return new Promise((resolve, reject) => {
+        // creating nodes first
         _.each(this.data, (node, i) => {
-          var id = i;
           this.nodes.push({
-            id: id,
+            id: i,
             name: node.name
           });
+        });
 
+        // creating links
+        _.each(this.data, (node, i) => {
           // build links linked by reference and make sure node is exists;
           _.each(node.neighborhoods, neighborhood => {
-            this.links.push({
-              source: _.find(this.nodes, el => el.id == id),
-              target: _.find(this.nodes, el => el.id == neighborhood.id),
-              direction: neighborhood.direction
-            });
-          });
+            let source = _.find(this.nodes, el => el.id == i);
+            let target = _.find(this.nodes, el => el.id == neighborhood.id);
 
-          // addEdge(node.previous.id, i, node.previous.direction);
+            if (source !== undefined && target !== undefined) {
+              this.links.push({
+                source: source,
+                target: target,
+                direction: neighborhood.direction
+              });
+              addEdge(neighborhood.id, i, neighborhood.direction);
+            }
+          });
         });
 
         resolve(graph);

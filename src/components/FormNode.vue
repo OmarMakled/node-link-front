@@ -7,17 +7,18 @@
         <input class="input" type="text" v-model="form.name" placeholder="Name" />
       </div>
     </div>
-    <button @click.prevent="onAddNeighborhoods" class="button is-small">&#43;</button>
+    <button @click.prevent="onAddNeighborhoods" class="button is-small is-success">&#43;</button>
     <label class="label">Neighborhoods</label>
     <div class="box">
       <neighborhood
+        :neighborhoods="neighborhoods"
         v-for="(neighborhood, index) in form.neighborhoods"
         :key="index"
         :neighborhood="neighborhood"
         @remove="onRemoveNeighborhood($event)"
       ></neighborhood>
     </div>
-    <button @click.prevent="onAddMeta" class="button is-small">&#43;</button>
+    <button @click.prevent="onAddMeta" class="button is-small is-success">&#43;</button>
     <label class="label">Meta</label>
     <div class="box">
       <custom-meta
@@ -62,7 +63,7 @@ import Neighborhood from "./Neighborhood.vue";
 import api from "../api";
 import { mapState } from "vuex";
 export default {
-  props: ["node", "targets"],
+  props: ["node", "neighborhoods"],
   components: {
     CustomMeta,
     Neighborhood
