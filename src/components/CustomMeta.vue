@@ -7,7 +7,7 @@
         </div>
         <div class="column">
           <input class="input" type="text" v-model="meta.value" placeholder="Value" />
-          <a href="#" class="icon--delete" @click="onRemove">&#45;</a>
+          <a href="#" class="delete is-small icon--delete" @click="onRemove">&#45;</a>
         </div>
       </div>
     </div>

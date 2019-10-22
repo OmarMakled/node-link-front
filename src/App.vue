@@ -104,8 +104,12 @@ export default {
           this.shortPathMode.nodes = [];
         }
       } else {
-        this.node = this.data[id];
+        let data = this.data[id];
+
         this.node.id = id;
+        this.node.name = data.name;
+        this.node.meta = data.meta || [];
+        this.node.neighborhoods = data.neighborhoods || [];
         this.showModal = true;
       }
     });

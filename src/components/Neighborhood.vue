@@ -3,7 +3,7 @@
     <div class="column">
       <div class="field">
         <div class="control">
-          <label class="label">Neighborhoods</label>
+          <label class="label">Node</label>
           <input class="input" type="text" v-model="neighborhood.id" />
         </div>
       </div>
@@ -13,7 +13,7 @@
         <div class="control">
           <label class="label">Direction</label>
           <input class="input" type="text" v-model="neighborhood.direction" />
-          <a href="#" class="icon--delete" @click="onRemove">&#45;</a>
+          <a href="#" class="delete is-small icon--delete" @click="onRemove">&#45;</a>
         </div>
       </div>
     </div>

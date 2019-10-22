@@ -7,11 +7,9 @@
         <input class="input" type="text" v-model="form.name" placeholder="Name" />
       </div>
     </div>
-    <div class="field">
-      <label class="label">
-        Add Neighborhoods
-        <a href="#" @click="onAddNeighborhoods">&#43;</a>
-      </label>
+    <button @click.prevent="onAddNeighborhoods" class="button is-small">&#43;</button>
+    <label class="label">Neighborhoods</label>
+    <div class="box">
       <neighborhood
         v-for="(neighborhood, index) in form.neighborhoods"
         :key="index"
@@ -19,11 +17,9 @@
         @remove="onRemoveNeighborhood($event)"
       ></neighborhood>
     </div>
-    <div class="field">
-      <label class="label">
-        Add Meta
-        <a href="#" @click="onAddMeta">&#43;</a>
-      </label>
+    <button @click.prevent="onAddMeta" class="button is-small">&#43;</button>
+    <label class="label">Meta</label>
+    <div class="box">
       <custom-meta
         v-for="(meta, index) in form.meta"
         :key="index"
