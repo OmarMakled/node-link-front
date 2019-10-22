@@ -7,78 +7,23 @@
         <input class="input" type="text" v-model="form.name" placeholder="Name" />
       </div>
     </div>
-    <div class="columns">
-      <div class="column">
-        <div class="field">
-          <div class="control">
-            <label class="label">Previous</label>
-            <div class="is-fullwidth select">
-              <select v-model="form.previous.id">
-                <option
-                  v-for="(target, index) in targets"
-                  :value="index"
-                  :key="index"
-                >{{ target.name }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="field">
-          <div class="control">
-            <label class="label">Direction</label>
-            <div class="is-fullwidth select">
-              <select v-model="form.previous.direction">
-                <option
-                  v-for="(direction, index) in directions"
-                  :value="direction.value"
-                  :key="index"
-                >{{ direction.name }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <div class="field">
-          <div class="control">
-            <label class="label">Next</label>
-            <div class="is-fullwidth select">
-              <select v-model="form.next.id">
-                <option
-                  v-for="(target, index) in targets"
-                  :value="index"
-                  :key="index"
-                >{{ target.name }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="field">
-          <div class="control">
-            <label class="label">Direction</label>
-            <div class="is-fullwidth select">
-              <select v-model="form.next.direction">
-                <option
-                  v-for="(direction, index) in directions"
-                  :value="direction.value"
-                  :key="index"
-                >{{ direction.name }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="field">
+      <label class="label">
+        Add Neighborhoods
+        <a href="#" @click="onAddNeighborhoods">&#43;</a>
+      </label>
+      <neighborhood
+        v-for="(neighborhood, index) in form.neighborhoods"
+        :key="index"
+        :neighborhood="neighborhood"
+        @remove="onRemoveNeighborhood($event)"
+      ></neighborhood>
     </div>
     <div class="field">
-      <div class="field">
+      <label class="label">
+        Add Meta
         <a href="#" @click="onAddMeta">&#43;</a>
-      </div>
+      </label>
       <custom-meta
         v-for="(meta, index) in form.meta"
         :key="index"
@@ -117,12 +62,14 @@
 <script>
 import _ from "underscore";
 import CustomMeta from "./CustomMeta.vue";
+import Neighborhood from "./Neighborhood.vue";
 import api from "../api";
 import { mapState } from "vuex";
 export default {
   props: ["node", "targets"],
   components: {
-    CustomMeta
+    CustomMeta,
+    Neighborhood
   },
   computed: {
     ...mapState(["loading", "errors"]),
@@ -137,11 +84,7 @@ export default {
   },
   data() {
     return {
-      form: this.node,
-      directions: [
-        { value: "left", name: "Left" },
-        { value: "right", name: "Right" }
-      ]
+      form: this.node
     };
   },
   methods: {
@@ -166,26 +109,38 @@ export default {
       this.handelRequest(promise);
     },
     onRemoveMeta(el) {
-      this.form.meta = _.filter(this.form.meta, node => node != el);
+      this.form.meta = _.filter(this.form.meta, meta => meta != el);
+    },
+    onRemoveNeighborhood(el) {
+      this.form.neighborhoods = _.filter(
+        this.form.neighborhoods,
+        neighborhood => neighborhood != el
+      );
     },
     onAddMeta() {
+      if (!Array.isArray(this.form.meta)) {
+        this.form.meta = [];
+      }
       this.form.meta.push({
         key: "",
         value: ""
+      });
+    },
+    onAddNeighborhoods() {
+      if (!Array.isArray(this.form.neighborhoods)) {
+        this.form.neighborhoods = [];
+      }
+      this.form.neighborhoods.push({
+        id: "",
+        direction: ""
       });
     },
     onReset() {
       this.form = {
         id: "",
         name: "",
-        next: { id: "", direction: "" },
-        previous: { id: "", direction: "" },
-        meta: [
-          {
-            key: "",
-            value: ""
-          }
-        ]
+        neighborhoods: [],
+        meta: []
       };
 
       this.$store.commit("setLoading", false);

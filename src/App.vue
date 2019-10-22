@@ -37,7 +37,7 @@
       <div class="modal" :class="{'is-active': showModal}">
         <div class="modal-background"></div>
         <div class="modal-card">
-          <div class="modal-card-body">
+          <div class="modal-card-body p4">
             <form-node :node="node" :targets="data" @refresh="refresh"></form-node>
           </div>
         </div>
@@ -77,20 +77,8 @@ export default {
       data: [],
       node: {
         name: "",
-        previous: {
-          id: "",
-          direction: ""
-        },
-        next: {
-          id: "",
-          direction: ""
-        },
-        meta: [
-          {
-            key: "",
-            value: ""
-          }
-        ]
+        meta: [],
+        neighborhoods: []
       },
       links: []
     };
@@ -185,32 +173,22 @@ export default {
       }
       return new Promise((resolve, reject) => {
         _.each(this.data, (node, i) => {
+          var id = i;
           this.nodes.push({
-            id: i,
-            name: node.name,
-            target: node.target || ""
+            id: id,
+            name: node.name
           });
 
           // build links linked by reference and make sure node is exists;
-          if (node.previous.id && this.data[node.previous.id]) {
+          _.each(node.neighborhoods, neighborhood => {
             this.links.push({
-              source: _.find(this.nodes, el => el.id == i),
-              target: _.find(this.nodes, el => el.id == node.previous.id),
-              direction: node.previous.direction
+              source: _.find(this.nodes, el => el.id == id),
+              target: _.find(this.nodes, el => el.id == neighborhood.id),
+              direction: neighborhood.direction
             });
+          });
 
-            addEdge(node.previous.id, i, node.previous.direction);
-          }
-
-          if (node.next.id && this.data[node.next.id]) {
-            this.links.push({
-              source: _.find(this.nodes, el => el.id == i),
-              target: _.find(this.nodes, el => el.id == node.next.id),
-              direction: node.next.direction
-            });
-
-            addEdge(node.next.id, i, node.next.direction);
-          }
+          // addEdge(node.previous.id, i, node.previous.direction);
         });
 
         resolve(graph);
